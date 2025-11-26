@@ -34,7 +34,7 @@ export default function AddressScreen() {
     return (
         <View className="flex-1 bg-[#D9F2FF] pt-5">
             <View className="flex-row justify-between items-center mb-3 px-5">
-                <Text className="text-2xl font-semibold text-[#0F0D23]">Subscribe</Text>
+                <Text className="text-2xl font-semibold text-[#0F0D23]">Address</Text>
                 <Pressable
                     onPress={() => router.back()}
                     className="w-12 h-12 bg-[#6DD1EB] rounded-2xl items-center justify-center"

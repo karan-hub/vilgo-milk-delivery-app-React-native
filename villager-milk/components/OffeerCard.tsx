@@ -5,7 +5,7 @@ import { Text, View } from "react-native";
 import StartFrom from "./StartFrom";
 
 export default function OfferCard({ plan }: { plan: SubscriptionPlan }) {
-    console.log(plan);
+    
 
     return (
         <View className="bg-white px-4 py-2 rounded-2xl shadow">
