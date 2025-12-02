@@ -1,9 +1,9 @@
 interface CartItem {
-  id: number;
+  id: Number;
   name: string;
   price: number;
   image: any;
-  unit: string;
+  unit: Number;
   count: number;
 }
 
@@ -14,9 +14,9 @@ interface CartState {
 
 type Action =
   | { type: "ADD_ITEM"; payload: CartItem }
-  | { type: "INCREMENT"; payload: { id: number } }
-  | { type: "DECREMENT"; payload: { id: number } }
-  | { type: "REMOVE_ITEM"; payload: { id: number } }
+  | { type: "INCREMENT"; payload: { id: Number } }
+  | { type: "DECREMENT"; payload: { id: Number } }
+  | { type: "REMOVE_ITEM"; payload: { id: Number } }
   | { type: "CLEAR_CART" }
 
   // Subscription Actions 

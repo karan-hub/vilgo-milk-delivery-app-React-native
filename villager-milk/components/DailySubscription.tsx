@@ -7,7 +7,7 @@ import UnitInput from "./UnitInput";
 
 export default function DailySubscription({ productId }: { productId: Number }) {
 
-  const [unit, setUnit] = useState(1);
+
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
@@ -15,6 +15,7 @@ export default function DailySubscription({ productId }: { productId: Number }) 
 
   const cartItem = state.items.find((item: any) => item.id === productId);
   const quantity = cartItem?.count || 1;
+  const [unit, setUnit] = useState(1);
 
   const product = products.find((p) => p.id === productId);
   if (!product) return null;
@@ -48,7 +49,21 @@ export default function DailySubscription({ productId }: { productId: Number }) 
       createdAt: new Date().toISOString(),
     }
     dispatch({ type: "ADD_SUBSCRIPTION", payload: subscriptions });
-    // console.log("All subscriptions: ", state.subscriptions);
+
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      unit,
+      count: 1,
+    };
+
+    dispatch({
+      type: "ADD_ITEM",
+      payload: cartItem
+    })
+
     Alert.alert("Added!", `plan added successfully.`);
   }
 
@@ -60,6 +75,8 @@ export default function DailySubscription({ productId }: { productId: Number }) 
         id: productId,
       }
     })
+
+    // console.log(state);
 
   }
 
@@ -86,18 +103,18 @@ export default function DailySubscription({ productId }: { productId: Number }) 
         {/* Quantity / Day */}
         <UnitInput
           label="Units per day"
-          unit={quantity}
+          unit={unit}
           onIncrease={handleIncrease}
           onDecrease={handleDecrease}
-      
+
         />
         {/* Start Date */}
-        <DateInput label="Start Date" value={startDate} onChange={ setStartDate} />
+        <DateInput label="Start Date" value={startDate} onChange={setStartDate} />
 
         {/* End Date */}
-        <DateInput label="End Date"  value={endDate} onChange={  setEndDate} />
+        <DateInput label="End Date" value={endDate} onChange={setEndDate} />
 
-         
+
       </View>
 
 

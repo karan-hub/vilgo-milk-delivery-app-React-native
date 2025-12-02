@@ -32,6 +32,7 @@ export default function ProductDetail() {
         count: 1,
       }
     });
+    
   };
 
   useEffect(() => {
