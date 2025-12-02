@@ -1,9 +1,10 @@
 import MenuItem from "@/components/MenuItem";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { UserRound } from "lucide-react-native";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function ProfileScreen() {
+  const router = useRouter();
   return (
     <ScrollView className="flex-1 bg-[#F3F6FF] px-5 py-6">
 
@@ -36,7 +37,7 @@ export default function ProfileScreen() {
 
         <MenuItem title="My Orders" action={() => router.push("/(tabs)/order")} />
         <MenuItem title="Subscriptions" action={() => router.push("/(tabs)/subscription")} />
-        <MenuItem title="Edit Addresses" action={()=> router.push("/Address")} />
+        <MenuItem title="Edit Addresses" action={()=> router.push("/address")} />
         <MenuItem title="Help & Support" action={function (): void {
           throw new Error("Function not implemented.");
         }} />

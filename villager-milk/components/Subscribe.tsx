@@ -1,9 +1,10 @@
-import { router } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import React from 'react'
 import { Pressable, View } from 'react-native'
 
 function Subscribe() {
+    const router = useRouter();
     return (
         <View className='flex-1 bg-slate-100'>
             <Pressable
@@ -16,4 +17,4 @@ function Subscribe() {
     )
 }
 
-export default Subscribe()
+export default Subscribe

@@ -1,7 +1,7 @@
 import OrderCard from "@/components/OrderCard";
 import { useCart } from "@/context/CartContext";
 import { Product } from "@/types/product";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { Home } from "lucide-react-native";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -9,6 +9,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 export default function ProductDetails() {
   const { state } = useCart();
+  const router = useRouter();
 
   const totalItems = state.items.reduce(
     (sum: number, item: any) => sum + item.count,

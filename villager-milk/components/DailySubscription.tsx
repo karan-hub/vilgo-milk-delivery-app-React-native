@@ -1,42 +1,30 @@
-import { MapPinHouse } from "lucide-react-native";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
-import StartFrom from "./StartFrom";
+import { View } from "react-native";
+import DateInput from "./DateInpute";
 import UnitInput from "./UnitInput";
 
 export default function DailySubscription() {
   const [unit, setUnit] = useState(1);
 
+
   return (
-    <View className="bg-white rounded-3xl p-4 shadow-sm shadow-blue-200/50 space-y-4">
-      
+    <View className="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm gap-3 mt-3">
 
-      {/* Unit / Day */}
-      <View className="mb-3">
-        <UnitInput lable={"Unit / Day"} unit={unit} />
-      </View>
+      {/* Quantity / Day */}
+      <UnitInput
+        lable="Units per day"
+        unit={unit}
 
-      {/* Start From */}
-      <View className="mb-3">
-        <StartFrom lable="Start From" />
-      </View>
+      />
+      {/* Start Date */}
+      <DateInput lable="Start Date" />
 
-      {/* To End */}
-      <View className="mb-3">
-        <StartFrom lable="To End" />
-      </View>
+      {/* End Date */}
+      <DateInput lable="End Date" />
 
       {/* Address */}
-      <View className="flex-row items-center justify-between mb-3 ">
-        <Text className="text-base font-semibold text-[#0F0D23] w-1/2">
-          Delivery Address
-        </Text>
 
-        <Pressable className="flex-row items-center justify-between px-4 py-3  bg-[#F3F8FF] rounded-xl w-1/2">
-          <Text className="text-slate-600">Select Address</Text>
-          <MapPinHouse size={18} color="#6DD1EB" />
-        </Pressable>
-      </View>
+
     </View>
   );
 }

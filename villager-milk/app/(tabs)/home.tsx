@@ -49,7 +49,6 @@ export default function HomeScreen() {
       <Search placeholder={"Search For Milk "} onChangeText={handleSearch} value={searchQuery} />
 
 
-
       <FlatList
         data={products}
         renderItem={({ item }) => <ProductCard product={item} onAddToCart={undefined} />}

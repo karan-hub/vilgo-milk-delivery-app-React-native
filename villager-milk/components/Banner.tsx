@@ -1,30 +1,16 @@
-import { Image, View } from "react-native"
-
-
-
+import { ImageBackground, View } from "react-native";
 
 function Banner() {
   return (
-
-    <View className="h-40 mx-3 mt-4 rounded-3xl overflow-hidden bg-[#6DD1EB] relative shadow-lg">
-
-      {/* Background Image */}
-      <Image
-        source={require("@/assets/images/homeBanner.png")}
-        className="w-full h-full absolute"
-        resizeMode="cover"
+    <View className="mx-4   rounded-3xl overflow-hidden shadow-lg">
+      <ImageBackground
+        source={require("@/assets/images/homeBanner v2.png")}
+        className="w-full"
+        style={{ aspectRatio: 2.4 }} 
+        resizeMode="contain"
       />
-      
-      {/* Gradient Overlay */}
-       
-      
-       
-
-      
-
     </View>
-
-  )
+  );
 }
 
-export default Banner
+export default Banner;

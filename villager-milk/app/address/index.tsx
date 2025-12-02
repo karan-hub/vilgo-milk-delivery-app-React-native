@@ -1,5 +1,5 @@
 import FormInput from "@/components/FormInput";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { ArrowLeft, Building, Globe, Hash, Home, Landmark, LocateFixed, MapPin } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
@@ -16,6 +16,8 @@ export default function AddressScreen() {
         latitude: "",
         longitude: ""
     });
+
+    const router = useRouter();
 
     const updateField = (key: string, value: string) => {
         setAddress({ ...address, [key]: value });

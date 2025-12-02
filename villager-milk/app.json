@@ -1,46 +1,53 @@
 {
   "expo": {
-    "name": "villager milk",
+    "name": "Villager Milk",
     "slug": "villager-milk",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/logo.png",
-    "scheme": "Villager Milks",
+    "icon": "./assets/icons/LogoV7.png",
+    "scheme": "villagermilk",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
+
+    "splash": {
+      "image": "./assets/icons/LogoV7.png",
+      "resizeMode": "contain"
+      
     },
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.villagermilk.app"
+    },
+
     "android": {
+      "package": "com.villagermilk.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/icons/logo.png",
-        "backgroundImage": "./assets/icons/logo.png",
-        "monochromeImage": "./assets/icons/logo.png"
+        "foregroundImage": "./assets/icons/LogoV7.png",
+         
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
+
     "web": {
-       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro",
+      "output": "static"
     },
+
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/icons/LogoV7.png",
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          
+          "imageWidth": 200
         }
       ]
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true

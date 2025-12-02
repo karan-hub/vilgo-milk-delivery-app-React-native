@@ -38,7 +38,7 @@ export const products = [
       }
     },
 
-    images: [ require("../assets/images/milk_bottle2.png") ],
+    images: [ require("../assets/images/cowMilk.png") ],
 
     highlights: [
       "100% Pure & Fresh",
@@ -91,7 +91,7 @@ export const products = [
       }
     },
 
-    images: [ require("../assets/images/milk_bottle2.png") ],
+    images: [ require("../assets/images/cowMilk.png") ],
 
     highlights: [
       "Fresh and preservative-free",
@@ -144,7 +144,7 @@ export const products = [
       }
     },
 
-    images: [ require("../assets/images/milk_bottle2.png") ],
+    images: [ require("../assets/images/BuffaloMilk.png") ],
 
     highlights: [
       "Extra creamy texture",
@@ -197,7 +197,7 @@ export const products = [
       }
     },
 
-    images: [ require("../assets/images/milk_bottle2.png") ],
+    images: [ require("../assets/images/BuffaloMilk.png") ],
 
     highlights: [
       "Thick & creamy",
