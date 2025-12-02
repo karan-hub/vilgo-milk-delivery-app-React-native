@@ -1,12 +1,13 @@
 import MenuItem from "@/components/MenuItem";
 import { useRouter } from "expo-router";
 import { UserRound } from "lucide-react-native";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
   const router = useRouter();
   return (
-    <ScrollView className="flex-1 bg-[#F3F6FF] px-5 py-6">
+    <SafeAreaView className="flex-1 bg-[#F3F6FF] px-5 pt-6 ">
 
       {/* Profile Card */}
       <View className="bg-white rounded-3xl p-6 shadow-sm mb-6 items-center">
@@ -44,13 +45,15 @@ export default function ProfileScreen() {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity className="bg-red-500 py-3 rounded-2xl mb-10">
+    <View className="flex-1 justify-end">
+    <TouchableOpacity className="bg-red-500 py-3 rounded-2xl mb-10   ">
         <Text className="text-white text-center font-semibold text-base">
           Logout
         </Text>
       </TouchableOpacity>
+    </View>
 
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 

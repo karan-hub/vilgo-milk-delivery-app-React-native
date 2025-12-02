@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { Home } from "lucide-react-native";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function ProductDetails() {
@@ -17,7 +18,7 @@ export default function ProductDetails() {
   );
 
   return (
-    <View className="flex-1 bg-[#D9F2FF]">
+    <SafeAreaView className="flex-1 bg-[#D9F2FF]">
       <View className="flex-col items-start justify-center px-5 pt-6">
         <Text className="text-xl font-semibold text-[#0F0D23]">
           My Cart ({totalItems})
@@ -47,6 +48,6 @@ export default function ProductDetails() {
         </ScrollView>
 
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

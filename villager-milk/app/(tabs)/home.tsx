@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { MapPinCheckInside, ShoppingCart } from "lucide-react-native";
 import React, { useState } from "react";
 import { FlatList, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 
@@ -23,7 +24,7 @@ export default function HomeScreen() {
 
 
   return (
-    <View className=" flex-1 bg-slate-100">
+    <SafeAreaView className=" flex-1 bg-slate-100">
       <View className="flex flex-row items-center justify-between h-16 px-4">
 
         <View className="flex-row justify-center items-center gap-1">
@@ -76,6 +77,6 @@ export default function HomeScreen() {
 
       />
 
-    </View>
+    </SafeAreaView>
   );
 }

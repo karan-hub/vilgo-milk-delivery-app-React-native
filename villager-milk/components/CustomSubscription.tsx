@@ -10,13 +10,13 @@ export default function CustomSubscription() {
     ];
 
     return (
-        <View className="bg-white rounded-xl px-3 py-3 border border-gray-200 shadow-sm mt-1">
+        <View className="bg-white rounded-xl px-3 py-3 border border-gray-200 shadow-sm mt-1 h-auto">
             <Text className="text-[13px] font-semibold text-[#0F0D23] mb-1">
                 Custom delivery schedule
             </Text>
 
             <ScrollView
-                style={{ maxHeight: 185 }}
+                style={{ maxHeight: "auto" }}
                 showsVerticalScrollIndicator={false}
             >
                 {week.map((day, i) => (
