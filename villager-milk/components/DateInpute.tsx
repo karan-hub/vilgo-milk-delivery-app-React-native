@@ -2,14 +2,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Calendar } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-    Platform,
-    Pressable,
-    Text,
-    View,
+  Platform,
+  Pressable,
+  Text,
+  View,
 } from "react-native";
 
 interface Props {
-  label: string;
+  label?: string;
   value: string;
   onChange: (date: string) => void;
 }

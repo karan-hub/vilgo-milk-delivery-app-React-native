@@ -21,9 +21,6 @@ export default function DailySubscription({ productId }: { productId: Number }) 
 
 
 
-
-
-
   const handleSavePlan = () => {
     if (!startDate) {
       Alert.alert(
@@ -52,6 +49,7 @@ export default function DailySubscription({ productId }: { productId: Number }) 
     }
     dispatch({ type: "ADD_SUBSCRIPTION", payload: subscriptions });
     // console.log("All subscriptions: ", state.subscriptions);
+    Alert.alert("Added!", `plan added successfully.`);
   }
 
   const handleIncrease = () => {
@@ -62,8 +60,6 @@ export default function DailySubscription({ productId }: { productId: Number }) 
         id: productId,
       }
     })
-
-    // console.log(state);
 
   }
 
@@ -82,8 +78,6 @@ export default function DailySubscription({ productId }: { productId: Number }) 
 
 
 
-
-
   return (
     <View
       className="flex-1 flex-col justify-between     ">
@@ -95,6 +89,7 @@ export default function DailySubscription({ productId }: { productId: Number }) 
           unit={quantity}
           onIncrease={handleIncrease}
           onDecrease={handleDecrease}
+      
         />
         {/* Start Date */}
         <DateInput label="Start Date" value={startDate} onChange={ setStartDate} />

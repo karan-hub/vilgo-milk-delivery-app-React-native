@@ -6,12 +6,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { useState } from "react";
 import {
-    Dimensions,
-    Image,
-    Pressable,
-    ScrollView,
-    Text,
-    View,
+  Dimensions,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -136,7 +136,7 @@ export default function SubscribeScreen() {
                       ([key, val], i) => (
                         <OfferCard
                           key={i}
-                        //   productId={Number(id)}
+                          productId={Number(id)}
                           plan={{ ...val, title: key }}
                         />
                       )
