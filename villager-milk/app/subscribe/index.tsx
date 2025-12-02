@@ -51,7 +51,7 @@ export default function SubscribeScreen() {
           className="bg-white  flex-1 rounded-3xl p-5  shadow-lg shadow-blue-200/50"
           style={{ minHeight: screenHeight * 0.75 }}
         >
-          
+
           {/* Product Info */}
           <View className="flex-row items-center mb-5">
             <View className="bg-[#F3F8FF] rounded-2xl p-2">
@@ -101,17 +101,15 @@ export default function SubscribeScreen() {
             ].map(({ key, title }) => (
               <Pressable
                 key={key}
-                className={`flex-1 py-3 items-center ${
-                  activeTab === key ? "bg-white" : ""
-                }`}
+                className={`flex-1 py-3 items-center ${activeTab === key ? "bg-white" : ""
+                  }`}
                 onPress={() => setActiveTab(key as any)}
               >
                 <Text
-                  className={`font-semibold text-sm ${
-                    activeTab === key
+                  className={`font-semibold text-sm ${activeTab === key
                       ? "text-[#0F0D23]"
                       : "text-slate-400"
-                  }`}
+                    }`}
                 >
                   {title}
                 </Text>
@@ -122,7 +120,7 @@ export default function SubscribeScreen() {
           {/* Content */}
           <View className="flex-1 ">
             {activeTab === "daily" && (
-                <DailySubscription productId={Number(id)} />
+              <DailySubscription productId={Number(id)} />
             )}
 
             {activeTab === "forYou" && (
@@ -157,9 +155,9 @@ export default function SubscribeScreen() {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 20 }}
               >
-                <CustomSubscription 
-                // productId={Number(id)}
-                 />
+                <CustomSubscription
+                  productId={Number(id)}
+                />
               </ScrollView>
             )}
           </View>
