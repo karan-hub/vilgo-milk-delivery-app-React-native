@@ -9,11 +9,17 @@ interface CartItem {
 
 interface CartState {
   items: CartItem[];
+  subscriptions: Subscription[];
 }
 
 type Action =
   | { type: "ADD_ITEM"; payload: CartItem }
-  | { type: "INCREMENT"; payload: { id: number; unit: string } }
-  | { type: "DECREMENT"; payload: { id: number; unit: string } }
-  | { type: "REMOVE_ITEM"; payload: { id: number; unit: string } }
-  | { type: "CLEAR_CART" };
+  | { type: "INCREMENT"; payload: { id: number } }
+  | { type: "DECREMENT"; payload: { id: number } }
+  | { type: "REMOVE_ITEM"; payload: { id: number } }
+  | { type: "CLEAR_CART" }
+
+  // Subscription Actions 
+  | { type: "ADD_SUBSCRIPTION"; payload: Subscription }
+  | { type: "UPDATE_SUBSCRIPTION"; payload: { id: string; data: Partial<Subscription> } }
+  | { type: "REMOVE_SUBSCRIPTION"; payload: { id: string } };

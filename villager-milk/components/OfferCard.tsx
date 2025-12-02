@@ -1,4 +1,4 @@
-import { SubscriptionPlan } from "@/types/Subscriptions";
+import { SubscriptionPlan } from "@/types/Subscription";
 import { BadgePercent } from "lucide-react-native";
 import { Text, View } from "react-native";
 import StartFrom from "./DateInpute";

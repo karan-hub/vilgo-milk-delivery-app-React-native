@@ -4,6 +4,7 @@ export const CartContext = createContext<any>(null);
 
 const initialState: CartState = {
   items: [],
+  subscriptions: []
 };
 
 function CartReducer(state: CartState, action: Action): CartState {
@@ -37,7 +38,7 @@ function CartReducer(state: CartState, action: Action): CartState {
       return {
         ...state,
         items: state.items.map((item) =>
-          item.id === action.payload.id && item.unit === action.payload.unit
+          item.id === action.payload.id
             ? { ...item, count: item.count + 1 }
             : item
         ),
@@ -48,7 +49,7 @@ function CartReducer(state: CartState, action: Action): CartState {
         ...state,
         items: state.items
           .map((item) =>
-            item.id === action.payload.id && item.unit === action.payload.unit
+            item.id === action.payload.id
               ? { ...item, count: Math.max(0, item.count - 1) }
               : item
           )
@@ -60,12 +61,37 @@ function CartReducer(state: CartState, action: Action): CartState {
         ...state,
         items: state.items.filter(
           (item) =>
-            !(item.id === action.payload.id && item.unit === action.payload.unit)
+            !(item.id === action.payload.id)
         ),
       };
 
     case "CLEAR_CART":
       return initialState;
+
+    case "ADD_SUBSCRIPTION":
+      return {
+        ...state,
+        subscriptions: [...state.subscriptions, action.payload],
+      };
+
+    case "UPDATE_SUBSCRIPTION":
+      return {
+        ...state,
+        subscriptions: state.subscriptions.map((sub) =>
+          sub.id === action.payload.id
+            ? { ...sub, ...action.payload.data }
+            : sub
+        ),
+      };
+
+    case "REMOVE_SUBSCRIPTION":
+      return {
+        ...state,
+        subscriptions: state.subscriptions.filter(
+          (sub) => sub.id !== action.payload.id
+        ),
+      };
+
 
     default:
       return state;
