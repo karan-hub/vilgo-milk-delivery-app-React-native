@@ -1,4 +1,5 @@
 import { useCart } from "@/context/CartContext";
+import { products } from "@/Data/products";
 import React, { useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
 import DateInput from "./DateInpute";
@@ -14,6 +15,9 @@ export default function CustomSubscription({ productId }: { productId: number })
     const [dayUnits, setDayUnits] = useState<{ [key: number]: number }>({});
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
+
+    const product = products.find((p) => p.id === productId);
+    if (!product) return null;
 
     const toggleDay = (i: number) => {
         if (selectedDays.includes(i)) {
@@ -60,6 +64,7 @@ export default function CustomSubscription({ productId }: { productId: number })
             dayUnits,
             selectedDays,
             startDate,
+            price: product.price,
             endDate,
             createdAt: new Date().toISOString(),
         };

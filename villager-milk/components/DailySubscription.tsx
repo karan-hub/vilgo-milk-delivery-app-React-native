@@ -45,6 +45,7 @@ export default function DailySubscription({ productId }: { productId: Number }) 
       type: "daily",
       unitsPerDay: unit,
       startDate,
+      price:product.price,
       endDate: endDate || null,
       createdAt: new Date().toISOString(),
     }

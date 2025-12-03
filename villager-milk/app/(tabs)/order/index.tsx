@@ -86,14 +86,26 @@ export default function ProductDetails() {
                 Cart is empty.
               </Text>
             ) : (
-              state.items.map((item: any) => (
-                <OrderCard key={item.id} id={item.id} />
+              state.items.map((item: any, index: number) => (
+                <OrderCard key={`${item.id}-${item.unit}-${index}`} id={item.id} />
               ))
             )}
           </View>
         </ScrollView>
 
+        {(state.items.length > 0 || state.subscriptions.length > 0) && (
+          <Pressable
+            className="mt-4 bg-[#0F80FF] py-4 rounded-2xl items-center shadow-sm active:opacity-90"
+            onPress={() => router.push("/checkout")}
+          >
+            <Text className="text-white text-base font-bold">
+              Checkout
+            </Text>
+          </Pressable>
+        )}
       </View>
+
+
     </SafeAreaView>
   );
 }

@@ -1,5 +1,6 @@
 
 import { useCart } from "@/context/CartContext";
+import { products } from "@/Data/products";
 import { BadgePercent, CheckCircle } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
@@ -15,6 +16,9 @@ export default function OfferCard(
 
   const [startDate, setStartDate] = useState<string>("")
   const { dispatch } = useCart();
+
+  const product = products.find((p) => p.id === productId);
+  if (!product) return null;
 
   const formattedTitle =
     plan.title.charAt(0).toUpperCase() + plan.title.slice(1).toLowerCase();
@@ -39,6 +43,7 @@ export default function OfferCard(
       unitsPerDay: plan.units,
       durationDays: plan.durationDays,
       startDate,
+      price :product.price,
       endDate: endDate.toISOString().split("T")[0],
       createdAt: new Date().toISOString(),
     };
