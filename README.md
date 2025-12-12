@@ -1,4 +1,4 @@
-# Villager Milk 🥛
+# Vilgo Milk 🥛
 
 A modern milk delivery mobile application built with React Native and Expo. Connect local farmers directly with consumers for fresh, organic milk delivery services.
 
