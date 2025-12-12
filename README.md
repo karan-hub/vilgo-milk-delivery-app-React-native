@@ -1,6 +1,6 @@
 # Villager Milk 🥛
 
-A modern milk delivery mobile application built with React Native (Expo) and Spring Boot backend. Connect local farmers directly with consumers for fresh, organic milk delivery services.
+A modern milk delivery mobile application built with React Native and Expo. Connect local farmers directly with consumers for fresh, organic milk delivery services.
 
 ## 🌟 Features
 
@@ -15,54 +15,22 @@ A modern milk delivery mobile application built with React Native (Expo) and Spr
 
 ## 🏗️ Architecture
 
-This project consists of two main components:
+This is a React Native mobile application built with Expo:
 
-### Frontend (Mobile App)
 - **Framework**: React Native with Expo
 - **Language**: TypeScript
 - **Styling**: NativeWind (Tailwind CSS for React Native)
 - **Navigation**: Expo Router with file-based routing
 - **State Management**: React Context API
 
-### Backend (API Server)
-- **Framework**: Spring Boot 3.5.4
-- **Language**: Java 17
-- **Database**: MySQL
-- **ORM**: Spring Data JPA with Hibernate
-- **Build Tool**: Maven
-
 ## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- Java 17
-- MySQL Server
 - Expo CLI (`npm install -g @expo/cli`)
 
-### Backend Setup
-
-1. **Database Setup**
-   ```bash
-   # Create MySQL database
-   CREATE DATABASE villager;
-   ```
-
-2. **Configure Database Connection**
-   Update `src/main/resources/application.properties` with your MySQL credentials:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/villager
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   ```
-
-3. **Run Backend**
-   ```bash
-   # Using Maven Wrapper
-   ./mvnw spring-boot:run
-   ```
-
-### Frontend Setup
+### Setup
 
 1. **Install Dependencies**
    ```bash
@@ -79,39 +47,49 @@ This project consists of two main components:
    - **iOS**: `npm run ios` (macOS only)
    - **Web**: `npm run web`
 
-## 📱 App Structure
+## � Project Structure
 
 ```
-app/
-├── (tabs)/                 # Main tab navigation
-│   ├── _layout.tsx        # Tab layout
-│   ├── home.tsx           # Home screen with products
-│   ├── order/             # Order history
-│   ├── profile/           # User profile
-│   └── subscription/      # Subscription management
-├── address/               # Address management
-├── auth/                  # Authentication screens
-├── checkout/              # Checkout process
-├── payment/               # Payment screens
-└── product/[id].tsx       # Product details
+villager-milk/
+├── app/                    # Expo Router app directory
+│   ├── _layout.tsx         # Root layout
+│   ├── (tabs)/            # Main tab navigation
+│   │   ├── _layout.tsx    # Tab layout
+│   │   ├── home.tsx       # Home screen
+│   │   ├── order/index.tsx # Order history
+│   │   ├── profile/index.tsx # User profile
+│   │   └── subscription/index.tsx # Subscription management
+│   ├── address/index.tsx   # Address management
+│   ├── auth/login.tsx      # Authentication
+│   ├── checkout/index.tsx  # Checkout process
+│   ├── payment/index.tsx   # Payment screens
+│   ├── product/[id].tsx    # Product details
+│   └── subscribe/index.tsx # Subscription setup
+├── components/             # Reusable UI components
+├── context/                # React Context providers
+├── hooks/                  # Custom React hooks
+├── lib/                    # Utility libraries
+├── services/               # API services
+├── types/                  # TypeScript type definitions
+├── assets/                 # Images, icons, fonts
+├── Data/                   # Static data files
+├── app.json                # Expo configuration
+├── package.json            # Node.js dependencies
+└── README.md               
 ```
 
 ## 🛠️ Tech Stack
 
 ### Frontend
 - React Native 0.81.5
+- React 19.1.0
 - Expo SDK 54
 - TypeScript 5.9
 - NativeWind 4.2.1
 - Expo Router 6.0
 - React Navigation 7.x
 
-### Backend
-- Spring Boot 3.5.4
-- Spring Data JPA
-- MySQL Connector/J
-- Maven
-
+ 
 ## 📦 Key Dependencies
 
 ### Frontend
@@ -121,11 +99,7 @@ app/
 - `react-native-reanimated` - Animations
 - `react-native-safe-area-context` - Safe area handling
 
-### Backend
-- `spring-boot-starter-web` - Web framework
-- `spring-boot-starter-data-jpa` - Data persistence
-- `mssql-jdbc` - SQL Server driver (configured for MySQL)
-- `spring-boot-starter-test` - Testing framework
+
 
 ## 🔧 Development
 
@@ -137,15 +111,12 @@ npm run lint
 
 ### Build Commands
 ```bash
-# Build for production
+# Build frontend for production
 npx expo build:android
 npx expo build:ios
 ```
-
-### Database Migration
-The application uses Hibernate's `ddl-auto=update` for automatic schema updates during development.
-
-## 🌍 Environment
+ 
+### 🌍 Environment
 
 - **Target Platforms**: iOS, Android, Web
 - **Minimum iOS Version**: 13.0
@@ -171,4 +142,4 @@ For support, email support@villagermilk.com or join our Discord community.
 ## 🙏 Acknowledgments
 
 - Built with ❤️ for local farmers and fresh milk lovers
-- Special thanks to the React Native and Spring Boot communities
+- Special thanks to the React Native and Expo communities
