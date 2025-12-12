@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Villager Milk",
+    "slug": "villager-milk",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icons/LogoV7.png",
+    "scheme": "villagermilk",
+    "userInterfaceStyle": "automatic",
+
+    "splash": {
+      "image": "./assets/icons/LogoV7.png",
+      "resizeMode": "contain"
+      
+    },
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.villagermilk.app"
+    },
+
+    "android": {
+      "package": "com.villagermilk.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/LogoV7.png",
+         
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+
+    "web": {
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro",
+      "output": "static"
+    },
+
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icons/LogoV7.png",
+          "resizeMode": "contain",
+          
+          "imageWidth": 200
+        }
+      ]
+    ],
+
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
