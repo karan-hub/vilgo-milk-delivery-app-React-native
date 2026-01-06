@@ -1,12 +1,22 @@
-interface Subscription {
-  id: string;                // unique ID for each plan
-  productId: number;         // product reference
-  type: "daily" | "custom" | "offer";
-  price:number;
-  unitsPerDay: number;
+export type SubscriptionType = "PREDEFINED" | "CUSTOM";
+
+export interface DeliverySchedule {
+  dayOfWeek: number;  
+  units: number;
+}
+
+export interface SubscriptionRequest {
+  type: SubscriptionType;
+
+  productId: string;
+
+  
+  planId?: string;
+
   startDate: string;
-  endDate: string | null;
-  selectedDays?: number[];   // only for custom plan
-  durationDays?: number;     // only for offer plan
-  createdAt: string;
+  endDate: string;
+
+  deliverySchedule: DeliverySchedule[];
+
+  estimatedPrice: number;
 }
