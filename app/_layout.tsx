@@ -10,7 +10,6 @@ export default function RootLayout() {
       <CartProvider>
         <StatusBar hidden={true} />
         <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
         </Stack>
       </CartProvider>
     </GestureHandlerRootView>
