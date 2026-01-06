@@ -1,29 +1,18 @@
 // /types/product.d.ts
 
-import { ImageSourcePropType } from "react-native";
 
 export interface Product {
-  id: number;
+  id: string;                      
   name: string;
-  type: string;
+  type: any ;
 
-  volume?: string;
-  weight?: string;
-
-  price: number;
+  unit: string;                    
+  price: number;                   
   inStock: boolean;
 
+  imageUrl: string;                
+
   tags?: string[];
-
-  rating: number;
-  reviewsCount: number;
-
-  subscriptionPrice?: {
-    weekly: number;
-    monthly: number;
-  } | null;
-
-  images: (ImageSourcePropType | string)[];
 
   highlights: string[];
   benefits: string[];
@@ -33,7 +22,9 @@ export interface Product {
     protein?: string;
     fat?: string;
     calcium?: string;
-    vitaminA?: string;
-    preservatives?: string;
   };
+
+  
+  rating?: number;
+  reviewsCount?: number;
 }
