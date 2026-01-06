@@ -74,6 +74,13 @@ function CartReducer(state: CartState, action: Action): CartState {
         subscriptions: [...state.subscriptions, action.payload],
       };
 
+    case "ADD_SUBSCRIPTION_REQUEST":
+      return {
+        ...state,
+        subscriptions: [...state.subscriptions, action.payload],
+      };
+
+
     case "UPDATE_SUBSCRIPTION":
       return {
         ...state,
