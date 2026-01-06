@@ -29,6 +29,7 @@ function TabIcon({ focused, icon, title }: { focused: boolean; icon: IconName; t
 export default function TabsLayout() {
     return (
         <Tabs
+            initialRouteName="home"
             screenOptions={{
                 tabBarShowLabel: false,
                 headerShown: false,
