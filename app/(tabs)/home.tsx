@@ -1,8 +1,8 @@
-import { products } from "@/Data/products";
 import Banner from "@/components/Banner";
 import ProductCard from "@/components/ProductCard";
 import Search from "@/components/Searchbar";
 import { useCart } from "@/context/CartContext";
+import { useProducts } from "@/hooks/useProducts";
 import { useRouter } from "expo-router";
 import {
   MapPinCheckInside,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react-native";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Pressable,
   Text,
@@ -20,6 +21,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen() {
   const router = useRouter();
   const { state } = useCart();
+  const {
+    products,
+    loading,
+    error,
+    reload
+  } = useProducts();
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -32,9 +39,29 @@ export default function HomeScreen() {
     0
   );
 
+
+
+  if (loading && products.length === 0) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return (
+      <View>
+        <Text>{error}</Text>
+        <Text onPress={reload}>Retry</Text>
+      </View>
+    );
+  }
+
+ 
+
+
+
+
   return (
     <SafeAreaView className="flex-1 bg-[#EAF6FF]">
-      
+
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
         {/* Location */}
@@ -48,9 +75,10 @@ export default function HomeScreen() {
           </Text>
         </Pressable>
 
+
         {/* Cart Icon */}
         <Pressable
-          onPress={() => router.push("/(tabs)/order")}
+          onPress={() => router.push("/order")}
           className="relative"
         >
           <ShoppingCart size={26} color="#0F0D23" />
