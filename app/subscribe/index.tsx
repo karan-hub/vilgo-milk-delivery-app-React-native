@@ -1,169 +1,160 @@
-import CustomSubscription from "@/components/CustomSubscription";
-import DailySubscription from "@/components/DailySubscription";
-import OfferCard from "@/components/OfferCard";
-import { products } from "@/Data/products";
+ 
+import CustomSubscription from "@/components/subscription/CustomSubscription";
+import PredefinedPlanCard from "@/components/subscription/PredefinedPlanCard";
+import { useProductDetail } from "@/hooks/useProductDetail";
+import { useSubscriptionPlans } from "@/hooks/useSubscriptionPlans";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
-import { useState } from "react";
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Animated, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SubscribeScreen() {
-  const { id } = useLocalSearchParams();
-  const product = products.find((p) => p.id === Number(id));
-
-  const [activeTab, setActiveTab] = useState<"daily" | "custom" | "forYou">(
-    "daily"
-  );
-
   const router = useRouter();
+  const { productId } = useLocalSearchParams<{ productId: string }>();
+  const [activeTab, setActiveTab] = useState<"PREDEFINED" | "CUSTOM">("PREDEFINED");
+  
+  const slideAnim = useRef(new Animated.Value(0)).current;
 
-  if (!product) return <Text>Product not found</Text>;
+  const { product, loading: productLoading } = useProductDetail(productId);
+  const { plans, loading: plansLoading } = useSubscriptionPlans(productId);
 
-  const screenHeight = Dimensions.get("window").height;
+  useEffect(() => {
+    Animated.spring(slideAnim, {
+      toValue: activeTab === "PREDEFINED" ? 0 : 1,
+      tension: 50,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [activeTab, slideAnim]);
+
+  if (productLoading || plansLoading) {
+    return (
+      <SafeAreaView className="flex-1 bg-gradient-to-b from-slate-50 to-white justify-center items-center">
+        <ActivityIndicator size="large" color="#2563eb" />
+      </SafeAreaView>
+    );
+  }
+
+  if (!product) {
+    return (
+      <SafeAreaView className="flex-1 bg-gradient-to-b from-slate-50 to-white justify-center items-center">
+        <Text className="text-slate-600 text-base">Product not found</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <SafeAreaView className="flex-1 bg-[#D9F2FF]">
+    <SafeAreaView className="flex-1 bg-gradient-to-b from-slate-50 to-white">
       {/* Header */}
       <View className="flex-row justify-between items-center px-5 py-4">
-        <Text className="text-2xl font-bold text-[#0F0D23]">
-          Subscribe
+        <Text className="text-2xl font-bold text-slate-900">
+          Subscribe & Save
         </Text>
 
         <Pressable
           onPress={() => router.back()}
-          className="bg-[#6DD1EB] p-3 rounded-2xl shadow-sm active:opacity-80"
+          className="bg-blue-600 p-3 rounded-2xl shadow-md"
         >
           <ArrowLeft size={20} color="#FFFFFF" />
         </Pressable>
       </View>
 
-      {/* Product Card */}
-      <View className="flex-1 mx-5 mb-6">
-        <View
-          className="bg-white  flex-1 rounded-3xl p-5  shadow-lg shadow-blue-200/50"
-          style={{ minHeight: screenHeight * 0.75 }}
-        >
+      {/* Product Summary Card */}
+      <View className="mx-5 mb-5 bg-white rounded-lg p-5 shadow-lg border border-slate-100">
+        <View className="flex-row items-center">
+          <View className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-3">
+            <Image
+              source={{ uri: product.imageUrl }}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
 
-          {/* Product Info */}
-          <View className="flex-row items-center mb-5">
-            <View className="bg-[#F3F8FF] rounded-2xl p-2">
-              <Image
-                source={product.images[0]}
-                className="w-32 h-36"
-                resizeMode="contain"
-              />
-            </View>
+          <View className="ml-4 flex-1">
+            <Text className="text-lg font-bold text-slate-900" numberOfLines={2}>
+              {product.name}
+            </Text>
 
-            <View className="ml-4 flex-1 justify-between" style={{ height: 144 }}>
-              <Text
-                className="text-lg font-bold text-[#0F0D23]"
-                numberOfLines={2}
-              >
-                {product.name}
+            <Text className="text-sm text-slate-500 mt-1">
+              per {product.unit}
+            </Text>
+
+            <View className="mt-2">
+              <Text className="text-2xl font-black text-blue-600">
+                ₹{product.price}
               </Text>
-
-              <View className="gap-3">
-                <View>
-                  <Text className="text-xs text-gray-400 font-semibold mb-1">
-                    Packaging
-                  </Text>
-                  <Text className="text-sm font-semibold text-slate-700">
-                    {product.volume || product.weight}
-                  </Text>
-                </View>
-
-                <View>
-                  <Text className="text-xs text-gray-400 font-semibold mb-1">
-                    Price
-                  </Text>
-                  <Text className="text-lg font-bold text-[#0F0D23]">
-                    ₹{product.price}
-                  </Text>
-                </View>
-              </View>
             </View>
           </View>
-
-          {/* Tabs */}
-          <View className="flex-row rounded-xl mb-4 overflow-hidden border border-gray-200 bg-gray-50">
-            {[
-              { key: "daily", title: "Daily" },
-              { key: "forYou", title: "For You" },
-              { key: "custom", title: "Custom" },
-            ].map(({ key, title }) => (
-              <Pressable
-                key={key}
-                className={`flex-1 py-3 items-center ${activeTab === key ? "bg-white" : ""
-                  }`}
-                onPress={() => setActiveTab(key as any)}
-              >
-                <Text
-                  className={`font-semibold text-sm ${activeTab === key
-                      ? "text-[#0F0D23]"
-                      : "text-slate-400"
-                    }`}
-                >
-                  {title}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-
-          {/* Content */}
-          <View className="flex-1 ">
-            {activeTab === "daily" && (
-              <DailySubscription productId={Number(id)} />
-            )}
-
-            {activeTab === "forYou" && (
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 20 }}
-              >
-                {product.subscriptions ? (
-                  <View className="gap-3">
-                    {Object.entries(product.subscriptions).map(
-                      ([key, val], i) => (
-                        <OfferCard
-                          key={i}
-                          productId={Number(id)}
-                          plan={{ ...val, title: key }}
-                        />
-                      )
-                    )}
-                  </View>
-                ) : (
-                  <View className="items-center justify-center py-8">
-                    <Text className="text-slate-400 text-sm">
-                      No offers available
-                    </Text>
-                  </View>
-                )}
-              </ScrollView>
-            )}
-
-            {activeTab === "custom" && (
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 20 }}
-              >
-                <CustomSubscription
-                  productId={Number(id)}
-                />
-              </ScrollView>
-            )}
-          </View>
-
         </View>
       </View>
+
+      {/* Tabs */}
+      <View className="mx-5 mb-5 relative">
+        <View className="bg-white rounded-lg p-1.5 shadow-md border border-slate-100 flex-row">
+          <Animated.View
+            className="absolute top-1.5 bottom-1.5 bg-blue-600 rounded-xl shadow-lg"
+            style={{
+              width: '50%',
+              left: 6,
+              transform: [{
+                translateX: slideAnim.interpolate({
+                  inputRange: [0, 1.3],
+                  outputRange: [1, (390 - 40 - 12) / 2]  
+                })
+              }]
+            }}
+          />
+          
+          <Pressable
+            onPress={() => setActiveTab("PREDEFINED")}
+            className="flex-1 py-3.5 rounded-full z-10"
+          >
+            <Text className={`text-center text-xs font-bold ${activeTab === "PREDEFINED" ? 'text-white' : 'text-slate-600'}`}>
+              RECOMMENDED PLANS
+            </Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => setActiveTab("CUSTOM")}
+            className="flex-1 py-3.5 rounded-full z-10"
+          >
+            <Text className={`text-center text-xs font-bold ${activeTab === "CUSTOM" ? 'text-white' : 'text-slate-600'}`}>
+              CUSTOM PLAN
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
+      {/* Content */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 30 }}
+      >
+        {activeTab === "PREDEFINED" ? (
+          <View className="mx-5 space-y-3">
+            {plans?.length === 0 ? (
+              <View className="items-center py-10">
+                <Text className="text-slate-400 text-center">
+                  No subscription plans available
+                </Text>
+              </View>
+            ) : (
+              plans?.map(plan => (
+                <PredefinedPlanCard
+                  key={plan.id}
+                  product={product}
+                  plan={plan}
+                />
+              ))
+            )}
+          </View>
+        ) : (
+          <View className="mx-5">
+            <CustomSubscription product={product} />
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
