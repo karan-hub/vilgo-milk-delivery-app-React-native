@@ -21,5 +21,6 @@ type Action =
 
   // Subscription Actions 
   | { type: "ADD_SUBSCRIPTION"; payload: Subscription }
+  | { type: "ADD_SUBSCRIPTION_REQUEST"; payload: Subscription }
   | { type: "UPDATE_SUBSCRIPTION"; payload: { id: string; data: Partial<Subscription> } }
   | { type: "REMOVE_SUBSCRIPTION"; payload: { id: string } };
