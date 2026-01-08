@@ -1,27 +1,33 @@
 import { Search } from "lucide-react-native";
-import { View, TextInput } from "react-native";
-
-
+import { TextInput, View } from "react-native";
 
 interface Props {
     placeholder: string;
     value?: string;
     onChangeText?: (text: string) => void;
-    onPress?: () => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
 }
 
-
-export default function SearchBar({ placeholder, value, onChangeText, onPress }: Props) {
+export default function SearchBar({ placeholder, value, onChangeText, onFocus, onBlur }: Props) {
     return (
-        <View className=' flex-row items-center bg-dark-200   px-2 mx-3  border-b border-gray-200 ' >
-            <Search  color={"#8CA9FF"} />
+        <View className='flex-row items-center bg-white rounded-2xl px-4 py-1 mx-1 border border-blue-100 shadow-md'>
+            <Search color={"#0F80FF"} size={20} />
             <TextInput
-                onPress={onPress}
                 placeholder={placeholder}
                 value={value}
                 onChangeText={onChangeText}
-                className="flex-1 ml-2 text-gray-800  "
-                placeholderTextColor="#A8B5DB"
+                onFocus={onFocus}
+                onBlur={onBlur}
+                className="flex-1 ml-3 text-[#0F0D23] text-base font-medium"
+                placeholderTextColor="#6B7B9E"
+                style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                }}
+                returnKeyType="search"
+                autoCapitalize="none"
+                autoCorrect={false}
             />
         </View>
     )

@@ -221,14 +221,14 @@ export default function AddressScreen() {
                 <Text className="text-2xl font-semibold text-[#0F0D23]">My Addresses</Text>
                 <Pressable
                     onPress={() => router.back()}
-                    className="w-12 h-12 bg-[#6DD1EB] rounded-2xl items-center justify-center"
+                    className="w-12 h-12 bg-[#0F80FF] rounded-2xl items-center justify-center"
                 >
                     <ArrowLeft size={20} color="#FFFFFF" />
                 </Pressable>
             </View>
 
             <ScrollView
-                className="flex-1 bg-[#F5FAFF] px-5 pt-5 border-t-white rounded-3xl"
+                className="flex-1 bg-[#EAF6FF] px-5 pt-5 border-t-white rounded-3xl"
                 showsVerticalScrollIndicator={false}
             >
                 {/* Address List */}

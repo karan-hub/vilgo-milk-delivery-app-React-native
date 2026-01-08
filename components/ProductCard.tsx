@@ -38,7 +38,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
   return (
 
      <Pressable
-      className="w-[48%] bg-[#BBE0EF] rounded-2xl p-3 mb-4 shadow-sm"
+      className="flex-1 mx-1 bg-[#BBE0EF] rounded-2xl p-3 mb-4 shadow-sm"
       onPress={() =>
         router.push({
           pathname: "/product/[id]",

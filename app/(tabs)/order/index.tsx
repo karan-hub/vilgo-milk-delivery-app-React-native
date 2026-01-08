@@ -1,8 +1,7 @@
 import OrderCard from "@/components/OrderCard";
-import SubscriptionCard from "@/components/SubscriptionCard";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "expo-router";
-import { Home } from "lucide-react-native";
+import { Home, ShoppingCart } from "lucide-react-native";
 import React from "react";
 import {
   Pressable,
@@ -10,21 +9,19 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ProductDetails() {
+export default function Order() {
   const { state } = useCart();
   const router = useRouter();
-
-  const totalOnceItems = state.items.reduce(
+  
+  const items = state?.items || [];
+  const totalItems = items.reduce(
     (sum: number, item: any) => sum + item.count,
     0
   );
-
-  const totalSubscriptions = state.subscriptions.length;
-
+ 
   return (
-    <SafeAreaView className="flex-1 bg-[#D9F2FF]">
+    <View className="flex-1 bg-[#D9F2FF]">
 
       {/* Header */}
       <View className="flex-row justify-between items-center px-5 pt-6">
@@ -33,7 +30,7 @@ export default function ProductDetails() {
             My Cart
           </Text>
           <Text className="text-xs font-medium text-gray-500">
-            {totalSubscriptions} plans • {totalOnceItems} items
+             {totalItems} items
           </Text>
         </View>
 
@@ -49,51 +46,56 @@ export default function ProductDetails() {
       </View>
 
       {/* Main Sheet */}
-      <View className="flex-1 bg-white rounded-t-3xl px-5 pt-6 pb-8 mt-4 shadow-lg">
+      <View className="flex-1 bg-white rounded-t-2xl px-5 pt-6 pb-8 mt-4 shadow-lg">
+        {/* Buy Once Section */}
+        <View className="flex-row items-center justify-between mb-6">
+          <View>
+            <Text className="text-xl font-black text-slate-900">
+              Buy Once
+            </Text>
+            <Text className="text-sm text-gray-500 mt-1">
+              One-time delivery items
+            </Text>
+          </View>
+          {totalItems > 0 && (
+            <View className="bg-[#0F80FF] px-4 py-2 rounded-full">
+              <Text className="text-sm font-bold text-white">
+                {totalItems} {totalItems === 1 ? "item" : "items"}
+              </Text>
+            </View>
+          )}
+        </View>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={{ paddingBottom: 20 }}
         >
-          {/* Subscription Section */}
-          <View className="mb-6">
-            <Text className="text-lg font-semibold text-[#0F0D23] mb-2">
-              Subscriptions
-            </Text>
-
-            {totalSubscriptions === 0 ? (
-              <Text className="text-sm text-gray-400">
-                No subscription plans added yet.
+          {totalItems === 0 ? (
+            <View className="items-center py-16">
+              <View className="w-24 h-24 bg-blue-50 rounded-2xl items-center justify-center mb-6">
+                <ShoppingCart size={40} color="#0F80FF" />
+              </View>
+              <Text className="text-xl font-bold text-[#0F0D23] mb-2">
+                Your cart is empty
               </Text>
-            ) : (
-              state.subscriptions.map((sub: any) => (
-                <SubscriptionCard key={sub.id} sub={sub} />
-              ))
-            )}
-          </View>
-
-          {/* Divider */}
-          <View className="h-[1px] bg-gray-200 my-3" />
-
-          {/* Buy Once Section */}
-          <View>
-            <Text className="text-lg font-semibold text-[#0F0D23] mb-2">
-              Buy Once
-            </Text>
-
-            {totalOnceItems === 0 ? (
-              <Text className="text-sm text-gray-400">
-                Cart is empty.
+              <Text className="text-base text-gray-500 text-center max-w-[250px]">
+                Add some fresh milk products to get started with your order
               </Text>
-            ) : (
-              state.items.map((item: any, index: number) => (
-                <OrderCard key={`${item.id}-${item.unit}-${index}`} id={item.id} />
-              ))
-            )}
-          </View>
+            </View>
+          ) : (
+            <View className="space-y-3">
+              {items.map((item: CartItem, index: number) => (
+                <OrderCard 
+                  key={`${item.id}-${item.unit}-${index}`} 
+                  id={item.id}
+                  unit={item.unit}
+                />
+              ))}
+            </View>
+          )}
         </ScrollView>
 
-        {(state.items.length > 0 || state.subscriptions.length > 0) && (
+        {(items.length > 0  ) && (
           <Pressable
             className="mt-4 bg-[#0F80FF] py-4 rounded-2xl items-center shadow-sm active:opacity-90"
             onPress={() => router.push("/checkout")}
@@ -106,6 +108,6 @@ export default function ProductDetails() {
       </View>
 
 
-    </SafeAreaView>
+    </View>
   );
 }

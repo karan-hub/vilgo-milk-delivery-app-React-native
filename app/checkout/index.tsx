@@ -1,51 +1,89 @@
+import { placeOrder } from "@/api/orderApi";
+import DeliverySlotSelector from "@/components/DeliverySlotSelector";
 import OrderCard from "@/components/OrderCard";
-import SubscriptionCard from "@/components/SubscriptionCard";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "expo-router";
 import { CheckCircle, Home } from "lucide-react-native";
 import React, { useMemo, useState } from "react";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CheckoutScreen() {
   const { state, dispatch } = useCart();
   const router = useRouter();
 
-  const [payment, setPayment] = useState<"COD" | "UPI" >("COD");
+  const [payment, setPayment] = useState<"COD" | "UPI">("COD");
+  const [deliverySlot, setDeliverySlot] = useState<"MORNING" | "EVENING">("EVENING");
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
-  const subscriptionTotal = useMemo(() =>
-    state.subscriptions.reduce((sum: number, s: any) => sum + s.price, 0)
-  , [state.subscriptions]);
+  // Calculate delivery date (next day)
+  const deliveryDate = useMemo(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0] + 'T18:00:00'; // Default to evening
+  }, []);
 
+  const items = state?.items || [];
   const buyOnceTotal = useMemo(() =>
-    state.items.reduce((sum: number, i: any) => sum + (i.price * i.count), 0)
-  , [state.items]);
+    items.reduce((sum: number, i: any) => sum + (i.price * i.count), 0)
+  , [items]);
 
-  const grandTotal = subscriptionTotal + buyOnceTotal;
+  const grandTotal = buyOnceTotal;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!payment) {
       Alert.alert("Select Payment Method", "Please choose how you want to pay.");
       return;
     }
 
-    Alert.alert(
-      "Order Placed Successfully ✌️",
-      "Your order has been placed successfully.",
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            dispatch({ type: "CLEAR_CART" });
-            router.push("/home"); 
+    if (items.length === 0) {
+      Alert.alert("Empty Cart", "Please add items to your cart before placing an order.");
+      return;
+    }
+
+    setIsPlacingOrder(true);
+
+    try {
+      // Prepare order data
+      const orderData = {
+        deliverySlot,
+        deliveryDate,
+        items: items.map((item: any) => ({
+          productId: item.id,
+          quantity: item.count
+        }))
+      };
+
+      // Call the API
+      const response = await placeOrder(orderData);
+
+      // Show success message with order details
+      Alert.alert(
+        "Order Placed Successfully! 🎉",
+        `Order ID: ${response.orderId}\nTotal: ₹${response.totalAmount}\nDelivery: ${response.deliverySlot} (${new Date(response.deliveryDate).toLocaleDateString()})`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              dispatch({ type: "CLEAR_CART" });
+              router.push("/home");
+            },
           },
-        },
-      ]
-    );
+        ]
+      );
+    } catch (error: any) {
+      console.error("Order placement failed:", error);
+      Alert.alert(
+        "Order Failed",
+        error.message || "Failed to place order. Please try again."
+      );
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#D9F2FF]">
+    <SafeAreaView className="flex-1 bg-[#EAF6FF]">
       <View className="flex-row items-center justify-between px-5 pt-6">
         <Text className="text-xl font-semibold text-[#0F0D23]">Checkout</Text>
 
@@ -53,7 +91,7 @@ export default function CheckoutScreen() {
           className="flex-row gap-1 items-center"
           onPress={() => router.push("/address")}
         >
-          <Home size={18} color="#6DD1EB" />
+          <Home size={18} color="#0F80FF" />
           <Text className="text-sm font-semibold text-[#0F0D23]">
             Address
           </Text>
@@ -65,25 +103,21 @@ export default function CheckoutScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 140 }}
       >
-        {/* Subscription */}
-        {state.subscriptions.length > 0 && (
+        {/* Buy Once */}
+        {items.length > 0 && (
           <>
-            <Text className="text-lg font-semibold mb-1">Subscription</Text>
-            {state.subscriptions.map((sub: any) => (
-              <SubscriptionCard key={sub.id} sub={sub} />
+            <Text className="text-lg font-semibold mt-4 mb-1">Buy Once</Text>
+            {items.map((item: any, index: number) => (
+              <OrderCard key={`${item.id}-${item.unit}-${index}`} id={item.id} unit={item.unit} />
             ))}
           </>
         )}
 
-        {/* Buy Once */}
-        {state.items.length > 0 && (
-          <>
-            <Text className="text-lg font-semibold mt-4 mb-1">Buy Once</Text>
-            {state.items.map((item: any, index: number) => (
-              <OrderCard key={`${item.id}-${item.unit}-${index}`} id={item.id} />
-            ))}
-          </>
-        )}
+        {/* Delivery Slot */}
+        <DeliverySlotSelector
+          selectedSlot={deliverySlot}
+          onSlotChange={setDeliverySlot}
+        />
 
         {/* Payment */}
         <Text className="text-lg font-semibold mt-6 mb-1">Payment Method</Text>
@@ -113,11 +147,6 @@ export default function CheckoutScreen() {
           </Text>
 
           <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-600">Subscription</Text>
-            <Text className="font-semibold text-gray-800">₹{subscriptionTotal}</Text>
-          </View>
-
-          <View className="flex-row justify-between mb-2">
             <Text className="text-gray-600">Buy Once</Text>
             <Text className="font-semibold text-gray-800">₹{buyOnceTotal}</Text>
           </View>
@@ -133,10 +162,20 @@ export default function CheckoutScreen() {
 
       {/* Place Order */}
       <Pressable
-        className="absolute bottom-5 mx-5 left-0 right-0 bg-[#0F80FF] py-4 rounded-2xl items-center shadow-sm active:opacity-90"
+        className={`absolute bottom-5 mx-5 left-0 right-0 py-4 rounded-2xl items-center shadow-sm ${
+          isPlacingOrder ? 'bg-gray-400' : 'bg-[#0F80FF] active:opacity-90'
+        }`}
         onPress={handlePlaceOrder}
+        disabled={isPlacingOrder}
       >
-        <Text className="text-white text-base font-bold">Place Order</Text>
+        {isPlacingOrder ? (
+          <View className="flex-row items-center gap-2">
+            <ActivityIndicator size="small" color="#fff" />
+            <Text className="text-white text-base font-bold">Placing Order...</Text>
+          </View>
+        ) : (
+          <Text className="text-white text-base font-bold">Place Order</Text>
+        )}
       </Pressable>
     </SafeAreaView>
   );

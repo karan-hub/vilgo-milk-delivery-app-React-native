@@ -96,3 +96,28 @@ export interface RegisterResponse extends User {}
 export interface RefreshResponse {
   accessToken: string;
 }
+
+export interface CreateOrderRequest {
+  deliverySlot: string;
+  deliveryDate: string;
+  items: {
+    productId: string;
+    quantity: number;
+  }[];
+}
+
+export interface CreateOrderResponce {
+  orderId: string;
+  deliverySlot: string;
+  deliveryDate: string;
+  totalAmount: number;
+  status: string;
+  createdAt: string;
+  orderItems: {
+    orderItemId?: string;
+    productName: string;
+    quantity: number;
+    price: number;
+    totalPrice: number;
+  }[];
+}

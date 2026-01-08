@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/env";
-import { getRefreshToken } from "@/utils/tokenStorage";
 import type { LoginRequest, LoginResponse, RefreshResponse, RegisterRequest, RegisterResponse } from "@/types/api";
+import { getRefreshToken } from "@/utils/tokenStorage";
 
 export async function refreshAccessToken(): Promise<RefreshResponse | null> {
   try {

@@ -31,9 +31,9 @@ export default function RegisterScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-5 justify-center">
-      <View className="bg-slate-50 p-6 rounded-3xl border border-slate-200">
-        <Text className="text-2xl font-bold text-center mb-6">Register</Text>
+    <SafeAreaView className="flex-1 bg-[#EAF6FF] px-5 justify-center">
+      <View className="bg-white p-6 rounded-3xl border border-blue-100 shadow-md">
+        <Text className="text-2xl font-bold text-center mb-6 text-[#0F0D23]">Register</Text>
 
         <FormInput
           label="Name"
@@ -61,7 +61,7 @@ export default function RegisterScreen() {
         <Pressable
           disabled={loading}
           onPress={handleRegister}
-          className={`mt-5 py-4 rounded-2xl ${loading ? "bg-slate-400" : "bg-blue-600"}`}
+          className={`mt-5 py-4 rounded-2xl ${loading ? "bg-gray-400" : "bg-[#0F80FF]"}`}
         >
           <Text className="text-white font-bold text-center text-base">
             {loading ? "Registering..." : "Register"}
@@ -72,7 +72,7 @@ export default function RegisterScreen() {
           onPress={() => router.push("/auth/login")}
           className="mt-4"
         >
-          <Text className="text-center text-blue-600">Already have an account? Login</Text>
+          <Text className="text-center text-[#0F80FF]">Already have an account? Login</Text>
         </Pressable>
       </View>
     </SafeAreaView>

@@ -4,14 +4,18 @@ export const CartContext = createContext<any>(null);
 
 const initialState: CartState = {
   items: [],
-  subscriptions: []
+
 };
 
 function CartReducer(state: CartState, action: Action): CartState {
+  // Ensure state is never undefined
+  if (!state) return initialState;
+  
   switch (action.type) {
 
     case "ADD_ITEM": {
-      const existing = state.items.find(
+      const currentItems = state.items || [];
+      const existing = currentItems.find(
         (item) =>
           item.id === action.payload.id &&
           item.unit === action.payload.unit
@@ -20,7 +24,7 @@ function CartReducer(state: CartState, action: Action): CartState {
       if (existing) {
         return {
           ...state,
-          items: state.items.map((item) =>
+          items: currentItems.map((item) =>
             item.id === existing.id && item.unit === existing.unit
               ? { ...item, count: item.count + 1 }
               : item
@@ -30,26 +34,30 @@ function CartReducer(state: CartState, action: Action): CartState {
 
       return {
         ...state,
-        items: [...state.items, action.payload],
+        items: [...currentItems, action.payload],
       };
     }
 
     case "INCREMENT":
+      const currentItemsInc = state.items || [];
       return {
         ...state,
-        items: state.items.map((item) =>
-          item.id === action.payload.id
+        items: currentItemsInc.map(item =>
+          item.id === action.payload.id &&
+            item.unit === action.payload.unit
             ? { ...item, count: item.count + 1 }
             : item
         ),
       };
 
     case "DECREMENT":
+      const currentItemsDec = state.items || [];
       return {
         ...state,
-        items: state.items
+        items: currentItemsDec
           .map((item) =>
-            item.id === action.payload.id
+            item.id === action.payload.id &&
+              item.unit === action.payload.unit
               ? { ...item, count: Math.max(0, item.count - 1) }
               : item
           )
@@ -57,48 +65,17 @@ function CartReducer(state: CartState, action: Action): CartState {
       };
 
     case "REMOVE_ITEM":
+      const currentItemsRem = state.items || [];
       return {
         ...state,
-        items: state.items.filter(
+        items: currentItemsRem.filter(
           (item) =>
-            !(item.id === action.payload.id)
+            !(item.id === action.payload.id && item.unit === action.payload.unit)
         ),
       };
 
     case "CLEAR_CART":
       return initialState;
-
-    case "ADD_SUBSCRIPTION":
-      return {
-        ...state,
-        subscriptions: [...state.subscriptions, action.payload],
-      };
-
-    case "ADD_SUBSCRIPTION_REQUEST":
-      return {
-        ...state,
-        subscriptions: [...state.subscriptions, action.payload],
-      };
-
-
-    case "UPDATE_SUBSCRIPTION":
-      return {
-        ...state,
-        subscriptions: state.subscriptions.map((sub) =>
-          sub.id === action.payload.id
-            ? { ...sub, ...action.payload.data }
-            : sub
-        ),
-      };
-
-    case "REMOVE_SUBSCRIPTION":
-      return {
-        ...state,
-        subscriptions: state.subscriptions.filter(
-          (sub) => sub.id !== action.payload.id
-        ),
-      };
-
 
     default:
       return state;
@@ -115,4 +92,10 @@ export const CartProvider = ({ children }: any) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};
