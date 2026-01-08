@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { Moon, Sun } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import DateInput from "../DateInpute";
+import DateInput from "./DateInpute";
 
 interface Props {
   product: {
@@ -30,21 +30,21 @@ export default function PredefinedPlanCard({ product, plan }: Props) {
   const canContinue = Boolean(startDate);
 
   return (
-    <View className="bg-white rounded-lg p-5 mb-2 shadow-lg border border-slate-100">
+    <View className="bg-white rounded-lg p-5 mb-2 shadow-lg border border-blue-100">
       {/* Header */}
       <View className="flex-row justify-between items-start mb-1">
         <View className="flex-1 pr-3">
-          <Text className="text-base font-bold text-slate-900">
+          <Text className="text-base font-bold text-[#0F0D23]">
             {plan.title}
           </Text>
 
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text className="text-sm text-gray-600 mt-1">
             {plan.durationDays} days · ₹{plan.price}
           </Text>
         </View>
 
         {plan.offer && (
-          <View className="bg-green-50 px-3 py-1 rounded-full">
+          <View className="bg-green-50 px-3 py-1 rounded-full border border-green-200">
             <Text className="text-xs font-bold text-green-700">
               {plan.offer}
             </Text>
@@ -115,7 +115,9 @@ export default function PredefinedPlanCard({ product, plan }: Props) {
         router.push({
           pathname: "/subscribe/payment",
           params: {
+            type: "PREDEFINED",
             planId: plan.id,
+            productId:product.id,
             startDate,
             deliverySlot,
             amount: plan.price,
