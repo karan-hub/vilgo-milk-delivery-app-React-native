@@ -8,7 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { confirmPayment, createPayment } from "@/api/paymentApi";
 
 import { getAddresses } from "@/api/addressApi";
-import { createSubscription } from "@/api/subscriptionApi";
+import { createCustomSubscription, createSubscription } from "@/api/subscriptionApi";
 import { getAccessToken } from "@/utils/tokenStorage";
 
 
@@ -17,24 +17,25 @@ export default function SubscriptionPaymentScreen() {
 
 
     const {
+        type,
         planId,
-        startDate,
-        deliverySlot,
-        amount,
-        isCustom,
         productId,
+        startDate,
         endDate,
         deliverySchedule,
+        amount,
+        deliverySlot
     } = useLocalSearchParams<{
+        type: "CUSTOM" | "PREDEFINED";
         planId?: string;
-        startDate: string;
-        deliverySlot?: "MORNING" | "EVENING";
-        amount: string;
-        isCustom?: string;
         productId?: string;
+        startDate: string;
         endDate?: string;
         deliverySchedule?: string;
+        amount: string;
+        deliverySlot?: "MORNING" | "EVENING";
     }>();
+
 
     const [loading, setLoading] = useState(false);
 
@@ -53,7 +54,7 @@ export default function SubscriptionPaymentScreen() {
                 return;
             }
 
-            // Check if user has addresses
+            // Check   addresses
             try {
                 const addresses = await getAddresses();
                 if (!addresses || addresses.length === 0) {
@@ -73,93 +74,106 @@ export default function SubscriptionPaymentScreen() {
             // 1️⃣ Create subscription
             let subscription;
 
-            if (isCustom === "true") {
-                // For custom subscriptions, we need to handle them differently
-                // Since the backend expects planId, we'll use a placeholder
-                // In a production app, this would create a custom plan first
+            if (type === "CUSTOM") {
+                // Validate amount before proceeding
+                const subscriptionAmount = Number(amount);
+                if (!Number.isFinite(subscriptionAmount) || subscriptionAmount <= 0) {
+                    throw new Error("Invalid subscription amount. Please try again.");
+                }
+
+                subscription = await createCustomSubscription({
+                    productId: productId!,
+                    startDate,
+                    endDate: endDate!,
+                    deliverySchedule: JSON.parse(deliverySchedule!),
+                    deliverySlot: (deliverySlot as any) || "MORNING",
+                    estimatedPrice: subscriptionAmount,
+                });
+            } else {
                 subscription = await createSubscription({
-                    planId: "custom-plan", // Placeholder for custom subscriptions
+                    planId: planId!,
+                    productId: productId,
                     startDate,
                     deliverySlot: deliverySlot || "MORNING",
                 });
-            } else {
-                // Handle predefined subscription
-                subscription = await createSubscription({
-                    planId,
-                    startDate,
-                    deliverySlot,
-                });
             }
+         
+    
 
-            // 2️⃣ Initiate payment
-            const payment = await createPayment({
-                subscriptionId: subscription.subscriptionId,
-                amount: Number(amount),
-                paymentMethod: "UPI",
-            });
+    // 2️⃣ Initiate payment
+    const paymentAmount = Number(amount);
+    if (!Number.isFinite(paymentAmount) || paymentAmount <= 0) {
+        throw new Error("Invalid payment amount. Please try again.");
+    }
 
-            // 3️⃣ Confirm payment (manual success)
-            await confirmPayment({ paymentId: payment.paymentId });
+    const payment = await createPayment({
+        subscriptionId: subscription.subscriptionId,
+        amount: paymentAmount,
+        paymentMethod: "UPI",
+    });
 
-            router.replace("/subscribe/success");
+    // 3️⃣ Confirm payment (manual success)
+    await confirmPayment({ paymentId: payment.paymentId });
 
-        } catch (e: any) {
-            Alert.alert("Payment failed", e.message);
-        } finally {
-            setLoading(false);
-        }
+    router.replace("/subscribe/success");
+
+} catch (e: any) {
+    Alert.alert("Payment failed", e.message);
+} finally {
+    setLoading(false);
+}
     };
 
 
-    return (
-        <SafeAreaView className="flex-1 bg-white px-5 justify-center">
-            <View className="bg-slate-50 p-6 rounded-3xl border border-slate-200">
-                <View className="items-center mb-6">
-                    <CheckCircle size={48} color="#16a34a" />
-                    <Text className="text-xl font-bold mt-3">
-                        Confirm Subscription
-                    </Text>
-                </View>
-
-                <View className="space-y-2 mb-6">
-                    <Text className="text-slate-600">
-                        Start Date: <Text className="font-bold">{startDate}</Text>
-                    </Text>
-                    
-                    {isCustom === "true" ? (
-                        <>
-                            <Text className="text-slate-600">
-                                End Date: <Text className="font-bold">{endDate}</Text>
-                            </Text>
-                            <Text className="text-slate-600">
-                                Type: <Text className="font-bold">Custom Plan</Text>
-                            </Text>
-                        </>
-                    ) : (
-                        <Text className="text-slate-600">
-                            Slot: <Text className="font-bold">{deliverySlot}</Text>
-                        </Text>
-                    )}
-                    
-                    <Text className="text-slate-600">
-                        Amount:{" "}
-                        <Text className="font-black text-lg text-green-600">
-                            ₹{amount}
-                        </Text>
-                    </Text>
-                </View>
-
-                <Pressable
-                    disabled={loading}
-                    onPress={handlePayAndSubscribe}
-                    className={`py-4 rounded-2xl ${loading ? "bg-slate-400" : "bg-blue-600"
-                        }`}
-                >
-                    <Text className="text-white font-bold text-center text-base">
-                        {loading ? "Processing..." : "Pay & Subscribe"}
-                    </Text>
-                </Pressable>
+return (
+    <SafeAreaView className="flex-1 bg-white px-5 justify-center">
+        <View className="bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <View className="items-center mb-6">
+                <CheckCircle size={48} color="#16a34a" />
+                <Text className="text-xl font-bold mt-3">
+                    Confirm Subscription
+                </Text>
             </View>
-        </SafeAreaView>
-    );
+
+            <View className="space-y-2 mb-6">
+                <Text className="text-slate-600">
+                    Start Date: <Text className="font-bold">{startDate}</Text>
+                </Text>
+
+                {type === "CUSTOM" ? (
+                    <>
+                        <Text className="text-slate-600">
+                            End Date: <Text className="font-bold">{endDate}</Text>
+                        </Text>
+                        <Text className="text-slate-600">
+                            Type: <Text className="font-bold">Custom Plan</Text>
+                        </Text>
+                    </>
+                ) : (
+                    <Text className="text-slate-600">
+                        Slot: <Text className="font-bold">{deliverySlot}</Text>
+                    </Text>
+                )}
+
+                <Text className="text-slate-600">
+                    Amount:{" "}
+                    <Text className="font-black text-lg text-green-600">
+                        ₹{amount}
+                    </Text>
+                </Text>
+            </View>
+
+            <Pressable
+                disabled={loading}
+                onPress={handlePayAndSubscribe}
+                className={`py-4 rounded-2xl ${loading ? "bg-slate-400" : "bg-blue-600"
+                    }`}
+            >
+                <Text className="text-white font-bold text-center text-base">
+                    {loading ? "Processing..." : "Pay & Subscribe"}
+                </Text>
+            </Pressable>
+        </View>
+    </SafeAreaView>
+);
 }
