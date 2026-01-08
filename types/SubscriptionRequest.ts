@@ -1,15 +1,17 @@
+import { DeliverySchedule } from "./Subscription";
+
 export interface SubscriptionRequest {
   type: "PREDEFINED" | "CUSTOM";
 
-  productId: string;
+  productId?: string;      
+  planId?: string;   
+
 
   startDate: string;
   endDate: string;
 
-  deliverySchedule: {
-    dayOfWeek: number; 
-    units: number;
-  }[];
+ 
+  deliverySchedule?: DeliverySchedule[];
 
   estimatedPrice: number;
 }
