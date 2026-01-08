@@ -1,101 +1,125 @@
 import { useCart } from "@/context/CartContext";
-import { products } from "@/Data/products";
 import { ShoppingBag, Trash2 } from "lucide-react-native";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
-import QuantitySelector from "./QuantitySelector";
+import QuantitySelector from "./subscription/QuantitySelector";
 
-const OrderCard = ({ id }: { id: number }) => {
-  const product = products.find((x) => x.id === id);
+type OrderCardProps = {
+  id: string;
+  unit: string;
+};
+
+
+const OrderCard = ({ id, unit }: OrderCardProps) => {
   const { state, dispatch } = useCart();
 
-  if (!product) return null;
+  const items = state?.items || [];
+  const cartItem = items.find(
+    (item: CartItem) => item.id === id && item.unit === unit
+  );
 
-  const cartItem = state.items.find((item: any) => item.id === id);
-  const quantity = cartItem?.count || 1;
+  if (!cartItem) return null;
+
+  const quantity = cartItem.count;
+
 
   const handleIncrease = () => {
     dispatch({
       type: "INCREMENT",
-      payload: { id: product.id }, 
+      payload: { id, unit },
     });
   };
 
   const handleDecrease = () => {
     dispatch({
       type: "DECREMENT",
-      payload: { id: product.id },
+      payload: { id, unit },
     });
   };
 
   const handleRemove = () => {
     dispatch({
       type: "REMOVE_ITEM",
-      payload: { id: product.id },
+      payload: { id, unit },
     });
   };
 
+
   return (
-    <View className="bg-white rounded-xl p-3 mt-3 shadow-sm border border-gray-100">
+    <View className="bg-white rounded-2xl p-4 mt-3 shadow-sm border border-blue-100 mx-1">
 
       {/* Product Info */}
-      <View className="flex-row items-center gap-3">
-        <Image
-          source={
-            typeof product.images[0] === "string"
-              ? { uri: product.images[0] }
-              : product.images[0]
-          }
-          className="w-14 h-14 rounded-lg"
-          resizeMode="contain"
-        />
-
-        <View className="flex-1 flex-row justify-between">
-          <View className="flex-col gap-1">
-            <Text className="text-[15px] font-semibold text-[#0F0D23]">
-              {product.name}
-            </Text>
-
-            <View className="flex-row gap-3 items-center">
-              <Text className="text-xs text-gray-500">
-                {product.volume || product.weight}
-              </Text>
-              <Text className="text-sm font-bold text-[#19a6cd]">
-                ₹{product.price}
-              </Text>
-            </View>
-          </View>
-
-          <QuantitySelector
-            quantity={quantity}
-            onIncrease={handleIncrease}
-            onDecrease={handleDecrease}
+      <View className="flex-row items-start gap-3">
+        <View className="w-16 h-16 bg-blue-50 rounded-xl items-center justify-center flex-shrink-0 overflow-hidden">
+          <Image
+            source={
+              typeof cartItem.image === "string"
+                ? { uri: cartItem.image }
+                : cartItem.image
+            }
+            className="w-full h-full rounded-xl"
+            resizeMode="cover"
           />
         </View>
+
+        <View className="flex-1 min-w-0">
+          {/* Product Name */}
+          <View className="flex-row  justify-between items-center">
+            <Text className="text-base font-bold text-[#0F0D23] mb-2" numberOfLines={2}>
+              {cartItem.name}
+            </Text>
+            <Text className="text-base text-gray-500    mb-2 rounded-md">
+              {cartItem.unit}
+            </Text>
+          </View>
+
+
+
+          {/* Quantity and Price Row */}
+          <View className="flex-row items-center justify-between mb-3">
+            <View className="flex-row items-center gap-2">
+              {/* <Text className="text-base text-gray-500 bg-gray-50 px-2 py-1 rounded-md">
+                {cartItem.unit}
+              </Text> */}
+              <Text className="text-lg font-bold text-[#0F80FF]">
+                ₹{cartItem.price}
+              </Text>
+            </View>
+
+            {/* Quantity Selector */}
+            <QuantitySelector
+              quantity={quantity}
+              onIncrease={handleIncrease}
+              onDecrease={handleDecrease}
+              width={90}
+              height={33}
+            />
+
+          </View>
+
+
+
+        </View>
       </View>
-
-      {/* Divider */}
-      <View className="border-t border-gray-200 border-dashed mt-3 mb-2" />
-
-      {/* Replace Start/End Date with Buy Once info */}
-      <View className="flex-row justify-between px-1">
-        <View className="flex-row items-center gap-1">
-          <ShoppingBag size={14} color="#6DD1EB" />
-          <Text className="text-[11px] text-gray-600">
-            Delivery: Buy Once
-          </Text>
+      <View className="flex-row justify-between items-center pt-3 border-t border-gray-100 gap-2">
+        <View className="flex-row justify-between items-center gap-1 flex-1 min-w-0">
+          <View className="flex-row gap-1 items-center justify-center">
+            <ShoppingBag size={16} color="#0F80FF" />
+            <Text className="text-xs text-gray-600 font-medium" numberOfLines={1}>
+              One-time delivery
+            </Text>
+          </View>
+          <Pressable
+            onPress={handleRemove}
+            className="flex-row items-center gap-1 bg-red-50 px-4 py-3 rounded-xl active:opacity-70 flex-shrink-0"
+          >
+            <Trash2 size={12} color="#DC2626" />
+            <Text className="text-xs font-semibold text-red-600">
+              Remove
+            </Text>
+          </Pressable>
         </View>
 
-        {/* Remove Button */}
-        <Pressable
-          onPress={handleRemove}
-          className="flex-row items-center gap-1 bg-red-50 px-2 py-1 rounded-md active:opacity-70"
-        >
-          <Trash2 size={14} color="#DC2626" />
-          <Text className="text-[11px] font-semibold text-red-600">
-            Remove
-          </Text>
-        </Pressable>
       </View>
     </View>
   );
